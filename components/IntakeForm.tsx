@@ -25,6 +25,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
       setTimeout(() => setShowConsentError(false), 2000);
       return;
     }
+    // HTML5 validation handles the 'required' on the Name field
     onSubmit(formData);
   };
 
@@ -57,31 +58,28 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
               <MinimalistInput 
                 id="email" 
                 type="email" 
-                placeholder="Required" 
+                placeholder="Email Address (Optional)" 
                 value={formData.email} 
                 onChange={handleChange} 
-                required
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="phone" className="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Contact Number</label>
               <MinimalistInput 
                 id="phone" 
-                placeholder="Required" 
+                placeholder="Contact Number (Optional)" 
                 value={formData.phone} 
                 onChange={handleChange} 
-                required
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="nric" className="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Last 4 Digits NRIC</label>
               <MinimalistInput 
                 id="nric" 
-                placeholder="Required" 
+                placeholder="NRIC (Optional)" 
                 maxLength={4} 
                 value={formData.nric} 
                 onChange={handleChange} 
-                required
               />
             </div>
           </div>
@@ -123,7 +121,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
           </div>
 
           <div className={`flex justify-center pt-8 ${showConsentError ? 'animate-bounce' : ''}`}>
-            <MinimalistButton type="submit">NEXT PHASE</MinimalistButton>
+            <MinimalistButton 
+              type="submit"
+              disabled={!formData.name}
+              className={`
+                ${!formData.name ? 'opacity-30 grayscale cursor-not-allowed' : 'opacity-100'}
+              `}
+            >
+              NEXT PHASE
+            </MinimalistButton>
           </div>
         </form>
       </div>
