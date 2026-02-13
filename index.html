@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilot Medical Group | Private Portal</title>
+    <title>Pilot Medical Group | Clinical Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,9 +20,6 @@
                     fontFamily: {
                         sans: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
                         serif: ['Playfair Display', 'serif'],
-                    },
-                    letterSpacing: {
-                        widest: '.25em',
                     }
                 }
             }
@@ -34,30 +30,28 @@
             background-color: #001F3F;
             color: #F8F8F8;
             font-family: 'Playfair Display', serif;
-            overflow-x: hidden;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
-        .step-container {
-            display: none;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
-        
-        .step-container.active {
-            display: flex;
-            opacity: 1;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .minimal-input {
             background: transparent;
             border-bottom: 1px solid rgba(248, 248, 248, 0.2);
-            padding: 12px 4px;
+            padding: 12px 0;
             font-family: 'Inter', sans-serif;
-            letter-spacing: 0.15em;
-            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.5s ease;
+            transition: border-color 0.4s ease;
         }
         
         .minimal-input:focus {
@@ -65,8 +59,7 @@
         }
 
         .minimal-button {
-            position: relative;
-            padding: 16px 48px;
+            padding: 14px 40px;
             background-color: #F8F8F8;
             color: #001F3F;
             font-family: 'Inter', sans-serif;
@@ -75,8 +68,7 @@
             letter-spacing: 0.3em;
             text-transform: uppercase;
             border: 1px solid #F8F8F8;
-            transition: all 0.5s ease;
-            overflow: hidden;
+            transition: all 0.4s ease;
         }
 
         .minimal-button:hover:not(:disabled) {
@@ -85,246 +77,210 @@
         }
 
         .minimal-button:disabled {
-            opacity: 0.3;
+            opacity: 0.2;
             cursor: not-allowed;
-            filter: grayscale(1);
         }
 
         .card-gradient {
-            background: linear-gradient(to top, #001F3F 10%, rgba(0, 31, 63, 0.6) 50%, transparent 100%);
+            background: linear-gradient(to top, #001F3F 0%, rgba(0, 31, 63, 0.4) 100%);
         }
 
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #001F3F; }
         ::-webkit-scrollbar-thumb { background: #334e68; }
-
-        .aurora-glow {
-            background: radial-gradient(circle at 50% 120%, #00f5ff, transparent 50%);
-            pointer-events: none;
-        }
     </style>
 </head>
-<body class="selection:bg-cream selection:text-midnight flex flex-col justify-between p-8 md:p-16">
+<body class="flex flex-col items-center">
 
-    <!-- Global Header -->
-    <header class="w-full border-t border-cream/20 pt-4 flex justify-between items-start z-10 mb-8">
-        <span class="font-sans text-[10px] tracking-widest uppercase opacity-50">
-            Pilot Healthcare Pte Ltd Private Portal
-        </span>
-        <span id="auth-status" class="font-sans text-[10px] tracking-widest uppercase opacity-50">
-            v1.0.4 — Est. 2026
-        </span>
+    <!-- Persistent Header Logo -->
+    <header class="w-full pt-12 pb-8 flex justify-center z-50">
+        <h1 class="text-2xl md:text-3xl font-serif tracking-[0.4em] uppercase font-light text-cream opacity-90">
+            PILOT MEDICAL GROUP
+        </h1>
     </header>
 
-    <!-- Step: Login -->
-    <div id="step-login" class="step-container active flex-grow flex-col items-center justify-center text-center">
-        <div class="w-full max-w-lg">
-            <header class="mb-20">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-serif tracking-[0.3em] uppercase leading-relaxed font-medium">
-                    Pilot Medical Group
-                </h1>
-                <div class="w-12 h-[1px] bg-cream/40 mx-auto mt-8"></div>
-            </header>
+    <!-- Main Content Wrapper -->
+    <main class="w-full flex-grow flex flex-col items-center px-6 pb-20">
 
-            <form id="login-form" class="flex flex-col items-center space-y-12">
-                <div class="w-full max-w-sm space-y-4">
-                    <label class="font-sans text-[10px] tracking-widest uppercase block text-center opacity-70 mb-4">
-                        Identification Required
-                    </label>
-                    <input type="password" id="login-password" placeholder="ACCESS KEY" class="minimal-input w-full text-center">
-                    <p id="login-error" class="hidden font-sans text-[10px] text-red-400 tracking-widest uppercase mt-2 animate-pulse">
-                        Invalid Access Key
-                    </p>
+        <!-- STEP 1: LOGIN -->
+        <section id="step-login" class="fade-in flex flex-col items-center justify-center w-full max-w-md pt-20">
+            <div class="w-full space-y-12 text-center">
+                <div class="space-y-4">
+                    <p class="font-sans text-[10px] tracking-[0.4em] uppercase opacity-50">Private Clinical Portal</p>
+                    <h2 class="text-xl font-serif italic">Access Verification</h2>
                 </div>
-                <button type="submit" class="minimal-button">ENTER</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Step: Disclaimer Modal (Overlay style) -->
-    <div id="step-disclaimer" class="step-container fixed inset-0 z-50 flex items-center justify-center p-8 bg-midnight/95 backdrop-blur-sm">
-        <div class="max-w-2xl w-full border border-cream/10 bg-midnight p-12 md:p-20 text-center space-y-12 shadow-2xl">
-            <header>
-                <h2 class="font-sans text-sm md:text-base tracking-[0.3em] uppercase font-bold text-cream mb-2">
-                    Important Disclaimer
-                </h2>
-                <div class="w-8 h-[1px] bg-cream/30 mx-auto mt-4"></div>
-            </header>
-            <p class="text-lg md:text-xl font-serif leading-relaxed text-cream/90">
-                This AI screening tool is for informational and wellness purposes only. It is not a substitute for professional clinical diagnosis or emergency monitoring. If you are experiencing severe symptoms, please contact emergency services or your doctor immediately.
-            </p>
-            <div class="pt-4">
-                <button id="acknowledge-btn" class="minimal-button">I ACKNOWLEDGE</button>
+                
+                <form id="login-form" class="space-y-8">
+                    <div class="relative">
+                        <input type="password" id="login-password" placeholder="ACCESS KEY" 
+                               class="minimal-input w-full text-center placeholder:opacity-30">
+                        <p id="login-error" class="hidden absolute left-0 right-0 -bottom-8 text-[10px] font-sans text-red-400 tracking-widest uppercase py-2">
+                            Incorrect Access Key
+                        </p>
+                    </div>
+                    <button type="submit" class="minimal-button mt-4">ENTER</button>
+                </form>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Step: Intake Form -->
-    <div id="step-intake" class="step-container flex-grow flex-col items-center justify-center">
-        <div class="w-full max-w-xl">
-            <header class="mb-16 text-center">
-                <h2 class="font-serif text-3xl mb-4 tracking-wider text-cream">Patient Information</h2>
-                <p class="font-sans text-[10px] tracking-widest uppercase opacity-50 text-cream">New Case Registration</p>
-            </header>
+        <!-- STEP 2: DISCLAIMER -->
+        <section id="step-disclaimer" class="hidden fade-in flex flex-col items-center justify-center w-full max-w-md pt-10">
+            <div class="w-full border border-cream/10 p-10 md:p-14 space-y-10 text-center">
+                <header class="space-y-2">
+                    <p class="font-sans text-[10px] tracking-widest uppercase opacity-40">Medical Notice</p>
+                    <h2 class="text-2xl font-serif font-light">Important Disclaimer</h2>
+                </header>
+                <div class="w-10 h-[1px] bg-cream/20 mx-auto"></div>
+                <p class="text-base font-serif leading-relaxed opacity-80 italic">
+                    This AI screening tool is for informational and wellness purposes only. It is not a substitute for professional clinical diagnosis or emergency monitoring. If you are experiencing severe symptoms, please contact emergency services or your physician immediately.
+                </p>
+                <button id="acknowledge-btn" class="minimal-button mt-4">I ACKNOWLEDGE</button>
+            </div>
+        </section>
 
-            <form id="intake-form" class="space-y-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
-                    <div class="space-y-2">
-                        <label class="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Full Legal Name</label>
-                        <input type="text" id="intake-name" placeholder="Required" class="minimal-input w-full" required>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Email Address</label>
-                        <input type="email" id="intake-email" placeholder="Email Address (Optional)" class="minimal-input w-full">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Contact Number</label>
-                        <input type="text" id="intake-phone" placeholder="Contact Number (Optional)" class="minimal-input w-full">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="font-sans text-[10px] tracking-widest uppercase opacity-50 block text-cream">Last 4 Digits NRIC</label>
-                        <input type="text" id="intake-nric" maxlength="4" placeholder="NRIC (Optional)" class="minimal-input w-full">
-                    </div>
-                </div>
+        <!-- STEP 3: INTAKE FORM -->
+        <section id="step-intake" class="hidden fade-in flex flex-col items-center w-full max-w-md pt-10">
+            <div class="w-full space-y-12">
+                <header class="text-center space-y-3">
+                    <p class="font-sans text-[10px] tracking-widest uppercase opacity-40">Registration</p>
+                    <h2 class="text-2xl font-serif font-light">Patient Intake</h2>
+                </header>
 
-                <!-- Privacy Consent Section -->
-                <div class="space-y-4 pt-4">
-                    <label class="flex items-start gap-4 cursor-pointer group">
-                        <div class="relative flex items-center justify-center mt-1">
+                <form id="intake-form" class="space-y-10">
+                    <div class="space-y-8">
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-sans tracking-widest uppercase opacity-40 mb-1">Full Legal Name</label>
+                            <input type="text" id="intake-name" placeholder="Required" class="minimal-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-sans tracking-widest uppercase opacity-40 mb-1">Email Address</label>
+                            <input type="email" id="intake-email" placeholder="Email Address (Optional)" class="minimal-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-sans tracking-widest uppercase opacity-40 mb-1">Contact Number</label>
+                            <input type="text" id="intake-phone" placeholder="Contact Number (Optional)" class="minimal-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-sans tracking-widest uppercase opacity-40 mb-1">Last 4 Digits NRIC</label>
+                            <input type="text" id="intake-nric" maxlength="4" placeholder="NRIC (Optional)" class="minimal-input">
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 group cursor-pointer">
+                        <div class="relative pt-1">
                             <input type="checkbox" id="intake-consent" class="peer sr-only">
-                            <div id="consent-box" class="w-4 h-4 border border-cream/40 group-hover:border-cream peer-checked:bg-cream transition-all duration-300"></div>
-                            <svg class="absolute w-3 h-3 text-midnight opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            <div class="w-4 h-4 border border-cream/30 peer-checked:bg-cream transition-all duration-300"></div>
+                            <svg class="absolute inset-x-0 inset-y-1.5 w-3.5 h-3.5 text-midnight opacity-0 peer-checked:opacity-100 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <span class="font-sans text-[12px] leading-relaxed text-cream/60 group-hover:text-cream/80 transition-colors duration-300">
-                            I consent to Pilot Medical Group collecting, using, and disclosing my personal data for the purposes of this AI screening and subsequent follow-up, in accordance with the Personal Data Protection Act (PDPA).
-                        </span>
-                    </label>
-                </div>
-
-                <div class="flex justify-center pt-8">
-                    <button type="submit" id="intake-next-btn" class="minimal-button" disabled>NEXT PHASE</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Step: Dashboard -->
-    <div id="step-dashboard" class="step-container flex-grow flex-col py-12">
-        <div class="max-w-6xl w-full mx-auto">
-            <header class="mb-16 text-center">
-                <h2 class="font-sans text-[10px] tracking-[0.4em] uppercase mb-4 opacity-60">Authenticated Access — Private Hub</h2>
-                <h1 class="text-4xl md:text-5xl font-serif font-medium leading-tight tracking-wide mb-6">
-                    AI Healthcare by <span class="italic text-cream">Pilot Medical Group</span>
-                </h1>
-                <div class="w-20 h-[1px] bg-cream/30 mx-auto"></div>
-                <p id="welcome-message" class="mt-8 font-serif text-lg opacity-80 max-w-2xl mx-auto italic">
-                    "Welcome back. Select a specialized domain to begin your AI-assisted diagnostics."
-                </p>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
-                <!-- Neurological Card -->
-                <a href="#" onclick="event.preventDefault()" class="group relative block aspect-[16/9] overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60" style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=1200')"></div>
-                    <div class="absolute inset-0 card-gradient opacity-95 group-hover:opacity-80 transition-opacity duration-700"></div>
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-1000 aurora-glow"></div>
-                    <div class="absolute inset-0 flex flex-col justify-end p-8 lg:p-12 space-y-4">
-                        <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-cream/70 group-hover:text-cream transition-all duration-700">NEURAL PATHWAYS</span>
-                        <div class="flex justify-between items-end">
-                            <h3 class="font-serif text-2xl lg:text-3xl font-light tracking-wide group-hover:italic transition-all">Neurological Health</h3>
-                            <div class="w-10 h-10 border border-cream/20 flex items-center justify-center rounded-full group-hover:bg-cream group-hover:text-midnight transition-all">
-                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" class="rotate-[-45deg] group-hover:rotate-0 transition-transform"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
-                            </div>
-                        </div>
+                        <p class="text-[11px] font-sans leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
+                            I consent to Pilot Medical Group processing my data for clinical screening purposes in accordance with PDPA guidelines.
+                        </p>
                     </div>
-                </a>
 
-                <!-- Mental Health Card -->
-                <a href="#" onclick="event.preventDefault()" class="group relative block aspect-[16/9] overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60" style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200')"></div>
-                    <div class="absolute inset-0 card-gradient opacity-95 group-hover:opacity-80 transition-opacity duration-700"></div>
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-1000 aurora-glow"></div>
-                    <div class="absolute inset-0 flex flex-col justify-end p-8 lg:p-12 space-y-4">
-                        <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-cream/70 group-hover:text-cream transition-all duration-700">COGNITIVE BALANCE</span>
-                        <div class="flex justify-between items-end">
-                            <h3 class="font-serif text-2xl lg:text-3xl font-light tracking-wide group-hover:italic transition-all">Mental Health</h3>
-                            <div class="w-10 h-10 border border-cream/20 flex items-center justify-center rounded-full group-hover:bg-cream group-hover:text-midnight transition-all">
-                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" class="rotate-[-45deg] group-hover:rotate-0 transition-transform"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
-                            </div>
-                        </div>
+                    <div class="flex justify-center pt-4">
+                        <button type="submit" id="intake-next-btn" class="minimal-button" disabled>NEXT PHASE</button>
                     </div>
-                </a>
-
-                <!-- Cardiovascular Card -->
-                <a href="https://www.pilotmedicalgroup.com/insight-genesis" target="_blank" rel="noopener noreferrer" class="group relative block aspect-[16/9] overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60" style="background-image: url('https://images.unsplash.com/photo-1628595351029-c2bf17511435?auto=format&fit=crop&q=80&w=1200')"></div>
-                    <div class="absolute inset-0 card-gradient opacity-95 group-hover:opacity-80 transition-opacity duration-700"></div>
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-1000 aurora-glow"></div>
-                    <div class="absolute inset-0 flex flex-col justify-end p-8 lg:p-12 space-y-4">
-                        <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-cream/70 group-hover:text-cream transition-all duration-700">VASCULAR ANALYSIS</span>
-                        <div class="flex justify-between items-end">
-                            <h3 class="font-serif text-2xl lg:text-3xl font-light tracking-wide group-hover:italic transition-all">Cardiovascular Health</h3>
-                            <div class="w-10 h-10 border border-cream/20 flex items-center justify-center rounded-full group-hover:bg-cream group-hover:text-midnight transition-all">
-                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" class="rotate-[-45deg] group-hover:rotate-0 transition-transform"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Musculoskeletal Card -->
-                <a href="#" onclick="event.preventDefault()" class="group relative block aspect-[16/9] overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60" style="background-image: url('https://images.unsplash.com/photo-1530210124550-912dc1381cb8?auto=format&fit=crop&q=80&w=1200')"></div>
-                    <div class="absolute inset-0 card-gradient opacity-95 group-hover:opacity-80 transition-opacity duration-700"></div>
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-1000 aurora-glow"></div>
-                    <div class="absolute inset-0 flex flex-col justify-end p-8 lg:p-12 space-y-4">
-                        <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-cream/70 group-hover:text-cream transition-all duration-700">SKELETAL STRUCTURE</span>
-                        <div class="flex justify-between items-end">
-                            <h3 class="font-serif text-2xl lg:text-3xl font-light tracking-wide group-hover:italic transition-all">Musculoskeletal Health</h3>
-                            <div class="w-10 h-10 border border-cream/20 flex items-center justify-center rounded-full group-hover:bg-cream group-hover:text-midnight transition-all">
-                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" class="rotate-[-45deg] group-hover:rotate-0 transition-transform"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                </form>
             </div>
+        </section>
 
-            <!-- Dashboard Footer/Support -->
-            <section class="mt-24 pt-12 border-t border-cream/10 text-center space-y-6">
-                <p class="font-sans text-[10px] tracking-widest uppercase opacity-40">Direct Support</p>
-                <p class="font-serif text-lg italic opacity-80">
-                    Need urgent assistance? Our Pilot team is available via the priority link below.
-                </p>
-                <div class="flex justify-center">
-                    <a href="https://wa.me/6580190641" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 font-sans text-[11px] tracking-[0.3em] uppercase border-b border-gold/40 pb-2 text-gold hover:text-cream hover:border-cream transition-all duration-500 group">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" class="group-hover:translate-x-1 transition-transform duration-500"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                        SPEAK WITH A PILOT STAFF 
+        <!-- STEP 4: DASHBOARD -->
+        <section id="step-dashboard" class="hidden fade-in w-full max-w-5xl pt-10">
+            <div class="w-full space-y-16">
+                <header class="text-center space-y-6">
+                    <p class="font-sans text-[10px] tracking-[0.4em] uppercase opacity-40">Private Clinical Hub</p>
+                    <h2 id="welcome-message" class="text-3xl md:text-4xl font-serif font-light tracking-wide">
+                        Pilot Diagnostic Center
+                    </h2>
+                    <div class="w-16 h-[1px] bg-cream/20 mx-auto"></div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Cardiovascular Link (Live) -->
+                    <a href="https://www.pilotmedicalgroup.com/insight-genesis" target="_blank" rel="noopener noreferrer" 
+                       class="group relative block aspect-video overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-40 grayscale group-hover:grayscale-0" 
+                             style="background-image: url('https://images.unsplash.com/photo-1628595351029-c2bf17511435?auto=format&fit=crop&q=80&w=1200')"></div>
+                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Vascular Analysis</span>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-serif text-2xl group-hover:italic transition-all">Cardiovascular Health</h3>
+                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" class="opacity-50 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                            </div>
+                        </div>
                     </a>
-                </div>
-            </section>
-        </div>
-    </div>
 
-    <!-- Global Footer -->
-    <footer class="w-full border-b border-cream/20 pb-4 flex flex-col md:flex-row justify-between items-end gap-4 z-10 mt-8">
-        <div class="max-w-xs text-left">
-            <p class="font-serif italic text-sm opacity-80 leading-relaxed">
-                "To know oneself is the beginning of all longevity."
-            </p>
-        </div>
-        <div class="flex gap-12 font-sans text-[10px] tracking-widest uppercase opacity-50">
-            <a href="#" class="hover:opacity-100 transition-opacity">Privacy</a>
-            <a href="#" class="hover:opacity-100 transition-opacity">Terms</a>
-            <a href="#" class="hover:opacity-100 transition-opacity">Contact</a>
-        </div>
-    </footer>
+                    <!-- Neurological (Placeholder) -->
+                    <div class="group relative block aspect-video overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 opacity-60">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale" 
+                             style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=1200')"></div>
+                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Neural Pathways</span>
+                            <h3 class="font-serif text-2xl">Neurological Health</h3>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-cream/10 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-cream/50 border border-cream/5">Coming Soon</div>
+                    </div>
+
+                    <!-- Mental Health (Placeholder) -->
+                    <div class="group relative block aspect-video overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 opacity-60">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale" 
+                             style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200')"></div>
+                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Cognitive Balance</span>
+                            <h3 class="font-serif text-2xl">Mental Health</h3>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-cream/10 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-cream/50 border border-cream/5">Coming Soon</div>
+                    </div>
+
+                    <!-- Musculoskeletal (Placeholder) -->
+                    <div class="group relative block aspect-video overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 opacity-60">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale" 
+                             style="background-image: url('https://images.unsplash.com/photo-1530210124550-912dc1381cb8?auto=format&fit=crop&q=80&w=1200')"></div>
+                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Skeletal Structure</span>
+                            <h3 class="font-serif text-2xl">Musculoskeletal Health</h3>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-cream/10 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-cream/50 border border-cream/5">Coming Soon</div>
+                    </div>
+                </div>
+
+                <!-- Footer Support -->
+                <footer class="mt-20 pt-16 border-t border-cream/10 text-center space-y-8">
+                    <p class="font-serif text-lg italic opacity-70">
+                        "Precision medicine for the modern pilot."
+                    </p>
+                    <div class="flex justify-center">
+                        <a href="https://wa.me/6580190641" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center gap-4 font-sans text-[11px] tracking-[0.3em] uppercase text-gold hover:text-cream border-b border-gold/40 pb-2 transition-all duration-500 group">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            Speak with a Pilot Physician
+                        </a>
+                    </div>
+                </footer>
+            </div>
+        </section>
+
+    </main>
 
     <script>
-        // State management
-        let currentStep = 'login';
-        let patientName = '';
-
+        // DOM Elements
+        const loginForm = document.getElementById('login-form');
+        const loginPassword = document.getElementById('login-password');
+        const loginError = document.getElementById('login-error');
+        
+        const intakeForm = document.getElementById('intake-form');
+        const intakeName = document.getElementById('intake-name');
+        const intakeConsent = document.getElementById('intake-consent');
+        const intakeNextBtn = document.getElementById('intake-next-btn');
+        
+        const acknowledgeBtn = document.getElementById('acknowledge-btn');
+        
         const steps = {
             login: document.getElementById('step-login'),
             disclaimer: document.getElementById('step-disclaimer'),
@@ -332,69 +288,51 @@
             dashboard: document.getElementById('step-dashboard')
         };
 
-        const authStatus = document.getElementById('auth-status');
-
+        // Navigation Logic
         function showStep(stepName) {
-            Object.values(steps).forEach(s => {
-                s.classList.remove('active');
-            });
-            
-            // Short delay for visual smoothness
-            setTimeout(() => {
-                steps[stepName].classList.add('active');
-                currentStep = stepName;
-                if (stepName !== 'login') {
-                    authStatus.textContent = 'Authenticated User';
-                }
-            }, 50);
+            Object.values(steps).forEach(s => s.classList.add('hidden'));
+            steps[stepName].classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Logic: Login
-        const loginForm = document.getElementById('login-form');
-        const loginPassword = document.getElementById('login-password');
-        const loginError = document.getElementById('login-error');
-
+        // Login Logic
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (loginPassword.value === '12345') {
                 showStep('disclaimer');
             } else {
                 loginError.classList.remove('hidden');
-                setTimeout(() => loginError.classList.add('hidden'), 2000);
+                loginPassword.classList.add('border-red-400');
+                setTimeout(() => {
+                    loginError.classList.add('hidden');
+                    loginPassword.classList.remove('border-red-400');
+                }, 3000);
             }
         });
 
-        // Logic: Disclaimer
-        const acknowledgeBtn = document.getElementById('acknowledge-btn');
+        // Disclaimer Logic
         acknowledgeBtn.addEventListener('click', () => {
             showStep('intake');
         });
 
-        // Logic: Intake Form Validation
-        const intakeForm = document.getElementById('intake-form');
-        const intakeName = document.getElementById('intake-name');
-        const intakeConsent = document.getElementById('intake-consent');
-        const intakeNextBtn = document.getElementById('intake-next-btn');
-
-        function updateIntakeButtonState() {
-            if (intakeName.value.trim() !== '' && intakeConsent.checked) {
-                intakeNextBtn.disabled = false;
-            } else {
-                intakeNextBtn.disabled = true;
-            }
+        // Intake Logic
+        function validateIntake() {
+            const isNameFilled = intakeName.value.trim().length > 0;
+            const isConsentChecked = intakeConsent.checked;
+            intakeNextBtn.disabled = !(isNameFilled && isConsentChecked);
         }
 
-        intakeName.addEventListener('input', updateIntakeButtonState);
-        intakeConsent.addEventListener('change', updateIntakeButtonState);
+        intakeName.addEventListener('input', validateIntake);
+        intakeConsent.addEventListener('change', validateIntake);
 
         intakeForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            patientName = intakeName.value;
-            document.getElementById('welcome-message').innerHTML = `"Welcome back, ${patientName}. Select a specialized domain to begin your AI-assisted diagnostics."`;
+            const name = intakeName.value.trim();
+            document.getElementById('welcome-message').innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
             showStep('dashboard');
         });
 
-        // Initialize
+        // App start
         showStep('login');
     </script>
 </body>
