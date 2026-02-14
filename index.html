@@ -202,6 +202,33 @@
             width: 0;
             height: 0;
         }
+
+        .logout-pill {
+            padding: 16px 48px;
+            background-color: transparent;
+            color: rgba(248, 248, 248, 0.6);
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            border: 1px solid rgba(248, 248, 248, 0.2);
+            border-radius: 9999px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: block;
+            margin: 4rem auto 0;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logout-pill:hover {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #EF4444;
+            background-color: rgba(239, 68, 68, 0.05);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body class="flex flex-col items-center">
@@ -515,6 +542,13 @@
                     </a>
                 </div>
 
+                <!-- Logout Button Container -->
+                <div class="w-full flex justify-center pb-8">
+                    <button class="logout-pill" onclick="handleLogout()">
+                        I have completed all the tests - Log Out
+                    </button>
+                </div>
+
                 <footer class="mt-20 pt-16 border-t border-cream/10 text-center space-y-8">
                     <p class="font-serif text-lg italic opacity-70">
                         "To know oneself is the beginning of all longevity."
@@ -650,6 +684,38 @@
             const name = intakeName.value.trim() || 'Valued Client';
             welcomeMessage.innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
             navigateTo('dashboard');
+        }
+
+        // Logout & Reset Function
+        function handleLogout() {
+            // 1. Clear password input
+            loginPassword.value = '';
+            
+            // 2. Uncheck all 6 checkboxes and remove selection styles
+            screenChecks.forEach(cb => {
+                cb.checked = false;
+                cb.closest('.selection-item').classList.remove('selected');
+            });
+            
+            // 3. Reset Subtotal, GST, and Final Total text displays
+            updateTotalCost();
+            
+            // 4. Clear the Transaction Reference Number input
+            paynowRef.value = '';
+            
+            // 5. Disable the Confirm Payment button
+            validatePayment();
+
+            // 6. Reset Intake Form
+            intakeName.value = '';
+            document.getElementById('intake-email').value = '';
+            document.getElementById('intake-phone').value = '';
+            document.getElementById('intake-nric').value = '';
+            intakeConsent.checked = false;
+            validateIntake();
+            
+            // 7. Navigate back to Login section
+            navigateTo('login');
         }
 
         // Smart Filtering Logic
