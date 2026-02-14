@@ -28,6 +28,7 @@
     <style>
         .hidden {
             display: none !important;
+            pointer-events: none !important;
         }
 
         body {
@@ -76,6 +77,7 @@
             cursor: pointer;
             display: inline-block;
             text-align: center;
+            z-index: 10;
         }
 
         .minimal-button:hover:not(:disabled) {
@@ -106,6 +108,7 @@
             display: inline-block;
             text-align: center;
             text-decoration: none;
+            z-index: 10;
         }
 
         .outline-button:hover {
@@ -126,10 +129,11 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 0;
+            padding: 10px;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: -10px;
+            left: -10px;
+            z-index: 50;
         }
 
         .back-nav-btn:hover {
@@ -143,6 +147,8 @@
 
         .dashboard-card {
             height: 280px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Custom text shadow for high legibility over vibrant images */
@@ -155,12 +161,51 @@
             filter: grayscale(100%) brightness(0.7);
             opacity: 0.3;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
 
         .group:hover .card-bg {
             filter: grayscale(0%) brightness(1.1) saturate(130%);
             opacity: 1;
             transform: scale(1.08);
+        }
+
+        /* Selection Page Styles */
+        .selection-item {
+            border: 1px solid rgba(248, 248, 248, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .selection-item:hover {
+            border-color: rgba(248, 248, 248, 0.3);
+            background-color: rgba(248, 248, 248, 0.02);
+        }
+
+        .selection-item.selected {
+            border-color: #F8F8F8;
+            background-color: rgba(248, 248, 248, 0.05);
+        }
+
+        /* Ensure input and label cover the whole area */
+        .selection-label {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+        }
+
+        .selection-checkbox {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
     </style>
 </head>
@@ -184,7 +229,7 @@
                     <h2 class="text-xl font-serif italic">Access Verification</h2>
                 </div>
                 
-                <form id="login-form" class="space-y-8">
+                <form id="login-form" class="space-y-8" onsubmit="handleLogin(event)">
                     <div class="relative">
                         <input type="password" id="login-password" placeholder="ACCESS KEY" 
                                class="minimal-input w-full text-center placeholder:opacity-30">
@@ -208,20 +253,20 @@
                 <p class="text-base font-serif leading-relaxed opacity-80 italic">
                     This AI screening tool is for informational and wellness purposes only. It is not a substitute for professional clinical diagnosis or emergency monitoring. If you are experiencing severe symptoms, please contact emergency services or your physician immediately.
                 </p>
-                <button id="acknowledge-btn" class="minimal-button mt-4">I ACKNOWLEDGE</button>
+                <button id="acknowledge-btn" class="minimal-button mt-4" onclick="navigateTo('intake')">I ACKNOWLEDGE</button>
             </div>
         </section>
 
         <!-- STEP 3: INTAKE FORM -->
         <section id="step-intake" class="hidden fade-in flex flex-col items-center w-full max-w-md pt-10 relative">
             <div class="w-full space-y-12">
-                <button id="back-to-login-btn" class="back-nav-btn">← BACK</button>
+                <button id="back-to-login-btn" class="back-nav-btn" onclick="handleBackToLogin()">← BACK</button>
                 <header class="text-center space-y-3 pt-4">
                     <p class="font-sans text-[10px] tracking-widest uppercase opacity-40">Registration</p>
                     <h2 class="text-2xl font-serif font-light">Customer Intake</h2>
                 </header>
 
-                <form id="intake-form" class="space-y-10">
+                <form id="intake-form" class="space-y-10" onsubmit="handleIntakeSubmit(event)">
                     <div class="space-y-8">
                         <div class="flex flex-col">
                             <label for="intake-name" class="text-[10px] font-sans tracking-widest uppercase opacity-40 mb-1 cursor-pointer">Full Legal Name</label>
@@ -246,7 +291,7 @@
                         
                         <div class="flex items-start gap-4 group w-full">
                             <div class="relative pt-1 flex-shrink-0">
-                                <input type="checkbox" id="pdpaConsent" class="peer sr-only cursor-pointer">
+                                <input type="checkbox" id="pdpaConsent" class="peer sr-only cursor-pointer" onchange="validateIntake()">
                                 <label for="pdpaConsent" class="block w-4 h-4 border border-cream/30 peer-checked:bg-cream transition-all duration-300 cursor-pointer"></label>
                                 <svg class="absolute inset-x-0 inset-y-1.5 w-3.5 h-3.5 text-midnight opacity-0 peer-checked:opacity-100 mx-auto pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -265,10 +310,81 @@
             </div>
         </section>
 
-        <!-- STEP 4: DASHBOARD -->
+        <!-- STEP 4: SELECTION PAGE -->
+        <section id="step-selection" class="hidden fade-in flex flex-col items-center w-full max-w-2xl pt-10 relative">
+            <div class="w-full space-y-12">
+                <button id="back-to-intake-btn" class="back-nav-btn" onclick="navigateTo('intake')">← BACK</button>
+                <header class="text-center space-y-3 pt-4">
+                    <p class="font-sans text-[10px] tracking-widest uppercase opacity-40">Consultation Setup</p>
+                    <h2 class="text-2xl font-serif font-light">AI Screening Selection</h2>
+                    <p class="text-[11px] font-sans italic opacity-40">Choose your required AI-driven analyses</p>
+                </header>
+
+                <div id="selection-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cardiovascular AI -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-cv" class="selection-checkbox screen-check" data-price="2.00" onchange="updateTotalCost()">
+                        <label for="sc-cv" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Cardiovascular AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$2.00 SGD</p>
+                        </label>
+                    </div>
+                    <!-- Men's Health AI -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-men" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
+                        <label for="sc-men" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Men's Health AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                        </label>
+                    </div>
+                    <!-- Neurological AI -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-neuro" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
+                        <label for="sc-neuro" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Neurological AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                        </label>
+                    </div>
+                    <!-- Mental Health AI -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-mental" class="selection-checkbox screen-check" data-price="10.00" onchange="updateTotalCost()">
+                        <label for="sc-mental" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Mental Health AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$10.00 SGD</p>
+                        </label>
+                    </div>
+                    <!-- Hemoglobin Check -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-heme" class="selection-checkbox screen-check" data-price="4.50" onchange="updateTotalCost()">
+                        <label for="sc-heme" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Hemoglobin Check</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$4.50 SGD</p>
+                        </label>
+                    </div>
+                    <!-- Musculoskeletal Health -->
+                    <div class="selection-item rounded-sm overflow-hidden">
+                        <input type="checkbox" id="sc-musc" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
+                        <label for="sc-musc" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Musculoskeletal Health</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="text-center pt-8 space-y-6">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-sans uppercase tracking-[0.3em] opacity-40">Total Estimated Cost</p>
+                        <h3 id="total-cost-display" class="text-2xl font-serif text-cream">Total Cost: $0.00 SGD</h3>
+                    </div>
+                    <button id="proceed-to-dash-btn" class="minimal-button" onclick="handleProceedToDashboard()">Agree & Proceed to Dashboard</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 5: DASHBOARD -->
         <section id="step-dashboard" class="hidden fade-in w-full max-w-6xl pt-10 relative">
             <div class="w-full space-y-16">
-                <button id="back-to-intake-btn" class="back-nav-btn">← BACK</button>
+                <button id="back-to-selection-btn" class="back-nav-btn" onclick="navigateTo('selection')">← BACK</button>
                 <header class="text-center space-y-6 pt-4">
                     <p class="font-sans text-[10px] tracking-[0.4em] uppercase opacity-40">Private AI Healthcare Hub by Pilot Medical Group</p>
                     <h2 id="welcome-message" class="text-3xl md:text-4xl font-serif font-light tracking-wide">
@@ -278,12 +394,12 @@
                 </header>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <!-- Cardiovascular Link - Updated with new vibrant image -->
+                    <!-- Cardiovascular Link -->
                     <a href="https://www.pilotmedicalgroup.com/insight-genesis" target="_blank" rel="noopener noreferrer" 
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?auto=format&fit=crop&w=1200&q=80')"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Vascular Analysis</span>
                             <div class="flex justify-between items-center">
                                 <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Cardiovascular Health</h3>
@@ -293,25 +409,25 @@
                     </a>
 
                     <!-- Neurological -->
-                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5 cursor-not-allowed">
+                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Neural Pathways</span>
                             <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Neurological Health</h3>
                         </div>
-                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm">Coming Soon</div>
+                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm z-20">Coming Soon</div>
                     </div>
 
                     <!-- Mental Health -->
-                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5 cursor-not-allowed">
+                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Cognitive Balance</span>
                             <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Mental Health</h3>
                         </div>
-                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm">Coming Soon</div>
+                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm z-20">Coming Soon</div>
                     </div>
 
                     <!-- Hemoglobin Check -->
@@ -319,7 +435,7 @@
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1200&q=80')"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Heme Analysis</span>
                             <div class="flex justify-between items-center">
                                 <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Hemoglobin Check</h3>
@@ -333,7 +449,7 @@
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&w=1200&q=80')"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Vitality & Support</span>
                             <div class="flex justify-between items-center">
                                 <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Men's Health</h3>
@@ -347,7 +463,7 @@
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1513506003011-3b037721b96d?auto=format&fit=crop&w=1200&q=80')"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Structural Motion</span>
                             <div class="flex justify-between items-center">
                                 <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Musculoskeletal Health</h3>
@@ -376,42 +492,48 @@
     </main>
 
     <script>
-        const loginForm = document.getElementById('login-form');
+        // DOM Elements
         const loginPassword = document.getElementById('login-password');
         const loginError = document.getElementById('login-error');
-        
-        const intakeForm = document.getElementById('intake-form');
         const intakeName = document.getElementById('intake-name');
         const intakeConsent = document.getElementById('pdpaConsent');
         const intakeNextBtn = document.getElementById('intake-next-btn');
-        
-        const acknowledgeBtn = document.getElementById('acknowledge-btn');
+        const totalCostDisplay = document.getElementById('total-cost-display');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const screenChecks = document.querySelectorAll('.screen-check');
 
-        const backToLoginBtn = document.getElementById('back-to-login-btn');
-        const backToIntakeBtn = document.getElementById('back-to-intake-btn');
-        
         const steps = {
             login: document.getElementById('step-login'),
             disclaimer: document.getElementById('step-disclaimer'),
             intake: document.getElementById('step-intake'),
+            selection: document.getElementById('step-selection'),
             dashboard: document.getElementById('step-dashboard')
         };
 
-        function showStep(stepName) {
+        // Navigation Engine
+        function navigateTo(stepName) {
             Object.values(steps).forEach(s => {
                 s.classList.add('hidden');
                 s.style.display = 'none';
             });
-            steps[stepName].classList.remove('hidden');
-            steps[stepName].style.display = 'flex';
-            if (stepName === 'dashboard') steps[stepName].style.display = 'block';
+            const target = steps[stepName];
+            if (target) {
+                target.classList.remove('hidden');
+                // Use block for containers that need full width, flex for centered layouts
+                if (['dashboard', 'selection'].includes(stepName)) {
+                    target.style.display = 'block';
+                } else {
+                    target.style.display = 'flex';
+                }
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        loginForm.addEventListener('submit', (e) => {
+        // Event Handlers
+        function handleLogin(e) {
             e.preventDefault();
             if (loginPassword.value === '12345') {
-                showStep('disclaimer');
+                navigateTo('disclaimer');
             } else {
                 loginError.classList.remove('hidden');
                 loginPassword.classList.add('border-red-400');
@@ -420,20 +542,12 @@
                     loginPassword.classList.remove('border-red-400');
                 }, 3000);
             }
-        });
+        }
 
-        acknowledgeBtn.addEventListener('click', () => {
-            showStep('intake');
-        });
-
-        backToLoginBtn.addEventListener('click', () => {
-            showStep('login');
+        function handleBackToLogin() {
+            navigateTo('login');
             loginPassword.value = '';
-        });
-
-        backToIntakeBtn.addEventListener('click', () => {
-            showStep('intake');
-        });
+        }
 
         function validateIntake() {
             const isNameFilled = intakeName.value.trim().length > 0;
@@ -441,17 +555,37 @@
             intakeNextBtn.disabled = !(isNameFilled && isConsentChecked);
         }
 
+        // Attach validation to name input
         intakeName.addEventListener('input', validateIntake);
-        intakeConsent.addEventListener('change', validateIntake);
 
-        intakeForm.addEventListener('submit', (e) => {
+        function handleIntakeSubmit(e) {
             e.preventDefault();
-            const name = intakeName.value.trim();
-            document.getElementById('welcome-message').innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
-            showStep('dashboard');
-        });
+            navigateTo('selection');
+        }
 
-        showStep('login');
+        function handleProceedToDashboard() {
+            const name = intakeName.value.trim() || 'Valued Client';
+            welcomeMessage.innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
+            navigateTo('dashboard');
+        }
+
+        // Selection & Pricing Logic
+        function updateTotalCost() {
+            let total = 0;
+            screenChecks.forEach(cb => {
+                const item = cb.closest('.selection-item');
+                if (cb.checked) {
+                    total += parseFloat(cb.dataset.price);
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            totalCostDisplay.textContent = `Total Cost: $${total.toFixed(2)} SGD`;
+        }
+
+        // Initial Navigation
+        navigateTo('login');
     </script>
 </body>
 </html>
