@@ -26,7 +26,6 @@
         }
     </script>
     <style>
-        /* Surgical Fix: Ensure hidden elements are completely removed from the layout flow */
         .hidden {
             display: none !important;
         }
@@ -74,6 +73,9 @@
             text-transform: uppercase;
             border: 1px solid #F8F8F8;
             transition: all 0.4s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
         }
 
         .minimal-button:hover:not(:disabled) {
@@ -89,8 +91,26 @@
             color: rgba(248, 248, 248, 0.3);
         }
 
-        .card-gradient {
-            background: linear-gradient(to top, #001F3F 0%, rgba(0, 31, 63, 0.4) 100%);
+        .outline-button {
+            padding: 12px 30px;
+            background-color: transparent;
+            color: #F8F8F8;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid rgba(248, 248, 248, 0.4);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .outline-button:hover {
+            border-color: #F8F8F8;
+            background-color: rgba(248, 248, 248, 0.05);
         }
 
         ::-webkit-scrollbar { width: 3px; }
@@ -98,7 +118,25 @@
         ::-webkit-scrollbar-thumb { background: #334e68; }
 
         .dashboard-card {
-            height: 280px; /* Consistent height for symmetry */
+            height: 280px;
+        }
+
+        /* Custom text shadow for high legibility over vibrant images */
+        .text-vibrant-shadow {
+            text-shadow: 0 2px 15px rgba(0,0,0,0.9), 0 1px 5px rgba(0,0,0,1);
+        }
+
+        /* Cinematic image state transition */
+        .card-bg {
+            filter: grayscale(100%) brightness(0.7);
+            opacity: 0.3;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .group:hover .card-bg {
+            filter: grayscale(0%) brightness(1.1) saturate(130%);
+            opacity: 1;
+            transform: scale(1.08);
         }
     </style>
 </head>
@@ -178,21 +216,24 @@
                         </div>
                     </div>
 
-                    <!-- Surgical Fix: Checkbox Linked via Label For ID -->
-                    <div class="flex items-start gap-4 group">
-                        <div class="relative pt-1 flex-shrink-0">
-                            <input type="checkbox" id="pdpaConsent" class="peer sr-only cursor-pointer">
-                            <label for="pdpaConsent" class="block w-4 h-4 border border-cream/30 peer-checked:bg-cream transition-all duration-300 cursor-pointer"></label>
-                            <svg class="absolute inset-x-0 inset-y-1.5 w-3.5 h-3.5 text-midnight opacity-0 peer-checked:opacity-100 mx-auto pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
+                    <div class="flex flex-col items-center gap-8 py-4">
+                        <a href="https://form.jotform.com/260442024345043" target="_blank" class="outline-button">📝 Read & Sign Consent Form</a>
+                        
+                        <div class="flex items-start gap-4 group w-full">
+                            <div class="relative pt-1 flex-shrink-0">
+                                <input type="checkbox" id="pdpaConsent" class="peer sr-only cursor-pointer">
+                                <label for="pdpaConsent" class="block w-4 h-4 border border-cream/30 peer-checked:bg-cream transition-all duration-300 cursor-pointer"></label>
+                                <svg class="absolute inset-x-0 inset-y-1.5 w-3.5 h-3.5 text-midnight opacity-0 peer-checked:opacity-100 mx-auto pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <label for="pdpaConsent" class="text-[11px] font-sans leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                I confirm I have signed the Pilot Medical Group Consent Form and consent to the PDPA policy.
+                            </label>
                         </div>
-                        <label for="pdpaConsent" class="text-[11px] font-sans leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            I consent to Pilot Medical Group processing my data for clinical screening purposes in accordance with PDPA guidelines.
-                        </label>
                     </div>
 
-                    <div class="flex justify-center pt-4">
+                    <div class="flex justify-center pt-2">
                         <button type="submit" id="intake-next-btn" class="minimal-button" disabled>NEXT PHASE</button>
                     </div>
                 </form>
@@ -211,86 +252,80 @@
                 </header>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <!-- Cardiovascular Link (Live) -->
+                    <!-- Cardiovascular Link - Updated with new vibrant image -->
                     <a href="https://www.pilotmedicalgroup.com/insight-genesis" target="_blank" rel="noopener noreferrer" 
-                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 hover:-translate-y-2">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-40 grayscale group-hover:grayscale-0" 
-                             style="background-image: url('https://images.unsplash.com/photo-1628595351029-c2bf17511435?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Vascular Analysis</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Vascular Analysis</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl group-hover:italic transition-all">Cardiovascular Health</h3>
-                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" class="opacity-50 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Cardiovascular Health</h3>
+                                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
                     </a>
 
-                    <!-- Neurological (Placeholder) -->
-                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 opacity-60">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale" 
-                             style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                    <!-- Neurological -->
+                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5 cursor-not-allowed">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Neural Pathways</span>
-                            <h3 class="font-serif text-2xl">Neurological Health</h3>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Neural Pathways</span>
+                            <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Neurological Health</h3>
                         </div>
-                        <div class="absolute top-4 right-4 bg-cream/10 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-cream/50 border border-cream/5">Coming Soon</div>
+                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm">Coming Soon</div>
                     </div>
 
-                    <!-- Mental Health (Placeholder) -->
-                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 opacity-60">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-30 grayscale" 
-                             style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                    <!-- Mental Health -->
+                    <div class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5 cursor-not-allowed">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Cognitive Balance</span>
-                            <h3 class="font-serif text-2xl">Mental Health</h3>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Cognitive Balance</span>
+                            <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Mental Health</h3>
                         </div>
-                        <div class="absolute top-4 right-4 bg-cream/10 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-cream/50 border border-cream/5">Coming Soon</div>
+                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm">Coming Soon</div>
                     </div>
 
                     <!-- Hemoglobin Check -->
                     <a href="#" onclick="event.preventDefault()" 
-                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 hover:-translate-y-2">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-40 grayscale group-hover:grayscale-0" 
-                             style="background-image: url('https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Heme Analysis</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Heme Analysis</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl group-hover:italic transition-all">Hemoglobin Check</h3>
-                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" class="opacity-50 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Hemoglobin Check</h3>
+                                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
                     </a>
 
                     <!-- Men's Health -->
                     <a href="#" onclick="event.preventDefault()" 
-                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 hover:-translate-y-2">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-40 grayscale group-hover:grayscale-0" 
-                             style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Vitality & Support</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Vitality & Support</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl group-hover:italic transition-all">Men's Health</h3>
-                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" class="opacity-50 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Men's Health</h3>
+                                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
                     </a>
 
                     <!-- Musculoskeletal Health -->
                     <a href="#" onclick="event.preventDefault()" 
-                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-transform duration-700 hover:-translate-y-2">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-40 grayscale group-hover:grayscale-0" 
-                             style="background-image: url('https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&q=80&w=1200')"></div>
-                        <div class="absolute inset-0 card-gradient opacity-90"></div>
+                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
+                             style="background-image: url('https://images.unsplash.com/photo-1513506003011-3b037721b96d?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
-                            <span class="text-[9px] font-sans tracking-widest text-cream/50 uppercase">Structural Motion</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Structural Motion</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl group-hover:italic transition-all">Musculoskeletal Health</h3>
-                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" class="opacity-50 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Musculoskeletal Health</h3>
+                                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
                     </a>
@@ -315,7 +350,6 @@
     </main>
 
     <script>
-        // DOM Elements
         const loginForm = document.getElementById('login-form');
         const loginPassword = document.getElementById('login-password');
         const loginError = document.getElementById('login-error');
@@ -334,11 +368,10 @@
             dashboard: document.getElementById('step-dashboard')
         };
 
-        // Navigation Logic
         function showStep(stepName) {
             Object.values(steps).forEach(s => {
                 s.classList.add('hidden');
-                s.style.display = 'none'; // Extra layer of protection
+                s.style.display = 'none';
             });
             steps[stepName].classList.remove('hidden');
             steps[stepName].style.display = 'flex';
@@ -346,7 +379,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Login Logic
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (loginPassword.value === '12345') {
@@ -361,12 +393,10 @@
             }
         });
 
-        // Disclaimer Logic
         acknowledgeBtn.addEventListener('click', () => {
             showStep('intake');
         });
 
-        // Intake Logic
         function validateIntake() {
             const isNameFilled = intakeName.value.trim().length > 0;
             const isConsentChecked = intakeConsent.checked;
@@ -383,7 +413,6 @@
             showStep('dashboard');
         });
 
-        // App start
         showStep('login');
     </script>
 </body>
