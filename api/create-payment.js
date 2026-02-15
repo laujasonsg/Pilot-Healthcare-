@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         amount: amount,
         currency: 'SGD',
         // This tells HitPay where to send the patient after they pay
-        redirect_url: `https://${req.headers.host}/?payment=success` 
+        redirect_url: `https://${req.headers.host}/` 
       }),
     });
 
