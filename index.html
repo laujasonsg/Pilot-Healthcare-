@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = { 
+        tailwind.config = {
             theme: {
                 extend: {
                     colors: {
@@ -344,10 +344,10 @@
 
                 <div id="selection-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-cv" class="selection-checkbox screen-check" data-price="2.00" onchange="updateTotalCost()">
+                        <input type="checkbox" id="sc-cv" class="selection-checkbox screen-check" data-price="4.50" onchange="updateTotalCost()">
                         <label for="sc-cv" class="selection-label">
                             <h4 class="font-serif text-lg tracking-wide">Cardiovascular AI</h4>
-                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$2.00 SGD</p>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$4.50 SGD</p>
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
@@ -358,10 +358,10 @@
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-neuro" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
+                        <input type="checkbox" id="sc-neuro" class="selection-checkbox screen-check" data-price="28.00" onchange="updateTotalCost()">
                         <label for="sc-neuro" class="selection-label">
                             <h4 class="font-serif text-lg tracking-wide">Neurological AI</h4>
-                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$28.00 SGD</p>
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
@@ -379,20 +379,33 @@
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-musc" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
+                        <input type="checkbox" id="sc-musc" class="selection-checkbox screen-check" data-price="15.00" onchange="updateTotalCost()">
                         <label for="sc-musc" class="selection-label">
                             <h4 class="font-serif text-lg tracking-wide">Musculoskeletal Health</h4>
-                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$15.00 SGD</p>
                         </label>
                     </div>
                 </div>
 
+                <!-- Promo Code Section -->
+                <div class="max-w-[340px] mx-auto pt-4 space-y-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="promo-input" placeholder="Enter Promo Code" class="minimal-input flex-grow text-[11px] placeholder:opacity-40">
+                        <button onclick="applyPromoCode()" class="outline-button !px-6 !py-2">Apply</button>
+                    </div>
+                    <p id="promo-msg" class="text-[9px] font-sans tracking-widest uppercase text-center hidden"></p>
+                </div>
+
                 <!-- Pricing Breakdown -->
-                <div class="text-center pt-8 space-y-6">
+                <div class="text-center pt-4 space-y-6">
                     <div class="space-y-2 border-t border-cream/10 pt-6">
                         <div class="flex justify-between items-center max-w-[240px] mx-auto text-[11px] font-sans uppercase tracking-widest opacity-60">
                             <span>Subtotal:</span>
                             <span id="subtotal-display">$0.00</span>
+                        </div>
+                        <div id="discount-row" class="hidden flex justify-between items-center max-w-[240px] mx-auto text-[11px] font-sans uppercase tracking-widest text-gold">
+                            <span>Discount:</span>
+                            <span id="discount-display">-$0.00</span>
                         </div>
                         <div class="flex justify-between items-center max-w-[240px] mx-auto text-[11px] font-sans uppercase tracking-widest opacity-60">
                             <span>GST (9%):</span>
@@ -500,7 +513,7 @@
                     </div>
 
                     <!-- Hemoglobin Check -->
-                    <a id="dash-heme" href="https://dashboard.genesis1medtech.com/patients" target="_blank" rel="noopener noreferrer" 
+                    <a id="dash-heme" href="https://dashboard.genesis1medtech.com/dashboard" target="_blank" rel="noopener noreferrer" 
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-100 group-hover:scale-110" 
                              style="background-image: url('https://i.postimg.cc/Jh6BYcJw/Screenshot-2026-02-14-at-6-27-59-PM.png'); filter: none;"></div>
@@ -575,12 +588,17 @@
         const intakeNextBtn = document.getElementById('intake-next-btn');
         const screenChecks = document.querySelectorAll('.screen-check');
         const subtotalDisplay = document.getElementById('subtotal-display');
+        const discountRow = document.getElementById('discount-row');
+        const discountDisplay = document.getElementById('discount-display');
         const gstDisplay = document.getElementById('gst-display');
         const finalTotalDisplay = document.getElementById('final-total-display');
         const welcomeMessage = document.getElementById('welcome-message');
         const paymentAmountDue = document.getElementById('payment-amount-due');
         const paynowRef = document.getElementById('paynow-ref');
         const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+        const promoInput = document.getElementById('promo-input');
+        const promoMsg = document.getElementById('promo-msg');
+        const proceedToPayBtn = document.getElementById('proceed-to-pay-btn');
 
         const steps = {
             login: document.getElementById('step-login'),
@@ -592,6 +610,66 @@
         };
 
         let currentTotal = 0;
+        let activePromoCode = null;
+
+        /** 
+         * PROMO CODE DICTIONARY
+         * Supported types: 'percentage' (standard logic), 'override' (forces total).
+         */
+        const PROMO_CODES = {
+            'genesis1': {
+                type: 'percentage',
+                description: '40% off Hemoglobin Check',
+                logic: (subtotal, items) => {
+                    if (items.includes('sc-heme')) {
+                        const hemePrice = 4.50; // Reference price for calculation
+                        return hemePrice * 0.40; // $1.80 discount
+                    }
+                    return 0;
+                }
+            },
+            'test': {
+                type: 'override',
+                value: 1.00,
+                message: 'Test Mode Activated.',
+                description: 'Force final total to $1.00'
+            },
+            'jason': {
+                type: 'override',
+                value: 0.00,
+                message: 'VIP Code Applied!',
+                description: 'Force final total to $0.00'
+            }
+        };
+
+        // Persistence and Return Flow
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('payment') === 'success') {
+                // Restore state
+                const savedName = localStorage.getItem('pilot_name');
+                const savedSelections = JSON.parse(localStorage.getItem('pilot_selections') || '[]');
+                
+                if (savedName) intakeName.value = savedName;
+                screenChecks.forEach(cb => {
+                    if (savedSelections.includes(cb.id)) {
+                        cb.checked = true;
+                    }
+                });
+
+                // Bypass screens
+                const name = savedName || 'Valued Client';
+                welcomeMessage.innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
+                applySmartFiltering();
+                navigateTo('dashboard');
+
+                // Cleanup URL
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+            } else {
+                navigateTo('login');
+            }
+        });
 
         // Navigation Engine
         function navigateTo(stepName) {
@@ -644,36 +722,134 @@
             navigateTo('selection');
         }
 
+        // Promo Code Logic
+        function applyPromoCode() {
+            const code = promoInput.value.trim().toLowerCase();
+            if (PROMO_CODES[code]) {
+                activePromoCode = code;
+                const promo = PROMO_CODES[code];
+                if (promo.type === 'override') {
+                    promoMsg.textContent = promo.message;
+                } else {
+                    promoMsg.textContent = 'Promo applied!';
+                }
+                promoMsg.className = 'text-[9px] font-sans tracking-widest uppercase text-center text-green-400 block';
+            } else {
+                activePromoCode = null;
+                promoMsg.textContent = 'Invalid code';
+                promoMsg.className = 'text-[9px] font-sans tracking-widest uppercase text-center text-red-400 block';
+            }
+            updateTotalCost();
+        }
+
         // Selection & Pricing Logic
         function updateTotalCost() {
-            let subtotal = 0;
+            let baseSubtotal = 0;
+            let selectedIds = [];
             screenChecks.forEach(cb => {
                 const item = cb.closest('.selection-item');
                 if (cb.checked) {
-                    subtotal += parseFloat(cb.dataset.price);
+                    baseSubtotal += parseFloat(cb.dataset.price);
                     item.classList.add('selected');
+                    selectedIds.push(cb.id);
                 } else {
                     item.classList.remove('selected');
                 }
             });
             
-            const gst = subtotal * 0.09;
-            const finalTotal = subtotal + gst;
-            
-            subtotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
-            gstDisplay.textContent = `$${gst.toFixed(2)}`;
+            let displaySubtotal = baseSubtotal;
+            let discountAmount = 0;
+            let gstAmount = 0;
+            let finalTotal = 0;
+            let showDiscountRow = false;
+
+            if (activePromoCode && PROMO_CODES[activePromoCode]) {
+                const promo = PROMO_CODES[activePromoCode];
+                if (promo.type === 'override') {
+                    displaySubtotal = promo.value;
+                    discountAmount = 0;
+                    gstAmount = 0;
+                    finalTotal = promo.value;
+                    showDiscountRow = false;
+                } else {
+                    discountAmount = promo.logic(baseSubtotal, selectedIds);
+                    const netSubtotal = Math.max(0, baseSubtotal - discountAmount);
+                    gstAmount = netSubtotal * 0.09;
+                    finalTotal = netSubtotal + gstAmount;
+                    showDiscountRow = discountAmount > 0;
+                    displaySubtotal = baseSubtotal;
+                }
+            } else {
+                gstAmount = baseSubtotal * 0.09;
+                finalTotal = baseSubtotal + gstAmount;
+                showDiscountRow = false;
+                displaySubtotal = baseSubtotal;
+            }
+
+            subtotalDisplay.textContent = `$${displaySubtotal.toFixed(2)}`;
+            gstDisplay.textContent = `$${gstAmount.toFixed(2)}`;
             finalTotalDisplay.textContent = `$${finalTotal.toFixed(2)} SGD`;
             
-            // Set currentTotal for the payment handoff
+            if (showDiscountRow) {
+                discountRow.classList.remove('hidden');
+                discountDisplay.textContent = `-$${discountAmount.toFixed(2)}`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
+            
             currentTotal = finalTotal;
         }
 
-        function handleProceedToPayment() {
-            paymentAmountDue.textContent = `Amount Due: $${currentTotal.toFixed(2)} SGD`;
-            navigateTo('payment');
+        async function handleProceedToPayment() {
+            // 1. The $0 VIP Bypass
+            if (currentTotal === 0) {
+                applySmartFiltering();
+                const name = intakeName.value.trim() || 'Valued Client';
+                welcomeMessage.innerHTML = `Welcome back, <span class="italic text-cream">${name}</span>`;
+                navigateTo('dashboard');
+                return;
+            }
+
+            // 2. The HitPay API Call
+            const originalText = proceedToPayBtn.textContent;
+            proceedToPayBtn.disabled = true;
+            proceedToPayBtn.textContent = "Redirecting to secure checkout...";
+
+            // Persist selections for return trip
+            localStorage.setItem('pilot_name', intakeName.value);
+            const selections = Array.from(screenChecks)
+                .filter(cb => cb.checked)
+                .map(cb => cb.id);
+            localStorage.setItem('pilot_selections', JSON.stringify(selections));
+
+            try {
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: Number(currentTotal.toFixed(2)) })
+                });
+
+                if (!response.ok) throw new Error('Payment gateway error');
+
+                const data = await response.json();
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No redirect URL found');
+                }
+            } catch (err) {
+                console.error('Payment Error:', err);
+                alert('Secure checkout is currently unavailable. Please use the manual PayNow fallback.');
+                proceedToPayBtn.disabled = false;
+                proceedToPayBtn.textContent = originalText;
+                
+                // Fallback to manual QR page
+                paymentAmountDue.textContent = `Amount Due: $${currentTotal.toFixed(2)} SGD`;
+                navigateTo('payment');
+            }
         }
 
-        // Payment Logic
+        // Manual Payment Logic (Fallback)
         function validatePayment() {
             const hasRef = paynowRef.value.trim().length > 0;
             confirmPaymentBtn.disabled = !hasRef;
@@ -688,33 +864,34 @@
 
         // Logout & Reset Function
         function handleLogout() {
-            // 1. Clear password input
             loginPassword.value = '';
-            
-            // 2. Uncheck all 6 checkboxes and remove selection styles
             screenChecks.forEach(cb => {
                 cb.checked = false;
                 cb.closest('.selection-item').classList.remove('selected');
             });
+
+            activePromoCode = null;
+            promoInput.value = '';
+            promoMsg.classList.add('hidden');
+            discountRow.classList.add('hidden');
             
-            // 3. Reset Subtotal, GST, and Final Total text displays
             updateTotalCost();
-            
-            // 4. Clear the Transaction Reference Number input
             paynowRef.value = '';
-            
-            // 5. Disable the Confirm Payment button
             validatePayment();
 
-            // 6. Reset Intake Form
             intakeName.value = '';
-            document.getElementById('intake-email').value = '';
-            document.getElementById('intake-phone').value = '';
-            document.getElementById('intake-nric').value = '';
+            const emailField = document.getElementById('intake-email');
+            const phoneField = document.getElementById('intake-phone');
+            const nricField = document.getElementById('intake-nric');
+            if (emailField) emailField.value = '';
+            if (phoneField) phoneField.value = '';
+            if (nricField) nricField.value = '';
             intakeConsent.checked = false;
             validateIntake();
+
+            localStorage.removeItem('pilot_name');
+            localStorage.removeItem('pilot_selections');
             
-            // 7. Navigate back to Login section
             navigateTo('login');
         }
 
@@ -753,9 +930,6 @@
                 grid.classList.remove('hidden');
             }
         }
-
-        // Initialize App
-        navigateTo('login');
     </script>
 </body>
 </html>
