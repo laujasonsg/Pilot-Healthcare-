@@ -301,7 +301,7 @@
 
     <!-- Persistent Header Logo -->
     <header class="w-full pt-12 pb-8 flex justify-center z-50">
-        <h1 class="text-2xl md:text-3xl font-serif tracking-[0.4em] uppercase font-light text-cream opacity-90">
+        <h1 class="text-2xl md:text-3xl font-serif tracking-[0.4em] uppercase font-light text-cream opacity-90 text-center">
             PILOT MEDICAL GROUP
         </h1>
     </header>
@@ -755,7 +755,6 @@
 
         /** 
          * PROMO CODE DICTIONARY
-         * Supported types: 'percentage' (standard logic), 'override' (forces total).
          */
         const PROMO_CODES = {
             'genesis1': {
@@ -783,12 +782,13 @@
             }
         };
 
-        // Persistence and Automatic Unlock Flow
+        // Secure Return Trip Logic
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
             
-            // 3. The Automatic Unlock (Handling the Return Trip)
-            if (urlParams.get('payment') === 'success') {
+            // Return Routing based on HitPay status parameters
+            if (status === 'completed') {
                 const savedName = localStorage.getItem('pilot_name');
                 const savedSelections = JSON.parse(localStorage.getItem('pilot_selections') || '[]');
                 
@@ -806,6 +806,28 @@
 
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+                
+            } else if (status === 'canceled' || status === 'failed') {
+                alert("Payment was not completed. Please try again.");
+                
+                const restoreSelections = JSON.parse(sessionStorage.getItem('pilot_selections_restore') || '[]');
+                const savedName = localStorage.getItem('pilot_name');
+                if (savedName) intakeName.value = savedName;
+                
+                screenChecks.forEach(cb => {
+                    if (restoreSelections.includes(cb.id)) {
+                        cb.checked = true;
+                    } else {
+                        cb.checked = false;
+                    }
+                });
+                
+                updateTotalCost();
+                navigateTo('selection');
+
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+                
             } else {
                 navigateTo('login');
             }
@@ -948,7 +970,6 @@
 
         // Payment Flow Logic
         async function handleProceedToPayment() {
-            // 1. The $0 VIP Bypass
             if (Number(currentTotal.toFixed(2)) === 0) {
                 applySmartFiltering();
                 const name = intakeName.value.trim() || 'Valued Client';
@@ -957,15 +978,17 @@
                 return;
             }
 
-            // 2. The HitPay API Call
             const originalText = proceedToPayBtn.textContent;
             proceedToPayBtn.disabled = true;
             proceedToPayBtn.textContent = "Redirecting to secure checkout...";
 
-            localStorage.setItem('pilot_name', intakeName.value);
+            // Save State Before Redirect (sessionStorage)
             const selections = Array.from(screenChecks)
                 .filter(cb => cb.checked)
                 .map(cb => cb.id);
+            sessionStorage.setItem('pilot_selections_restore', JSON.stringify(selections));
+            
+            localStorage.setItem('pilot_name', intakeName.value);
             localStorage.setItem('pilot_selections', JSON.stringify(selections));
 
             try {
@@ -985,11 +1008,8 @@
                 }
             } catch (err) {
                 console.error('Payment Flow Error:', err);
-                
-                // Keep the reverted static PayNow QR code payment flow logic as requested
                 paymentAmountDue.textContent = `Amount Due: $${currentTotal.toFixed(2)} SGD`;
                 navigateTo('payment');
-                
                 proceedToPayBtn.disabled = false;
                 proceedToPayBtn.textContent = originalText;
             }
@@ -1037,6 +1057,7 @@
 
             localStorage.removeItem('pilot_name');
             localStorage.removeItem('pilot_selections');
+            sessionStorage.removeItem('pilot_selections_restore');
             
             navigateTo('login');
         }
