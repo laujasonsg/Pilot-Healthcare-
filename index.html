@@ -296,6 +296,7 @@
             opacity: 1;
         }
     </style>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="flex flex-col items-center">
 
@@ -417,16 +418,16 @@
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-men" class="selection-checkbox screen-check" data-price="20.00" onchange="updateTotalCost()">
-                        <label for="sc-men" class="selection-label">
-                            <h4 class="font-serif text-lg tracking-wide">Men's Health AI</h4>
-                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$20.00 SGD</p>
+                        <input type="checkbox" id="cognitiveAi" name="cognitiveAi" class="selection-checkbox screen-check" data-price="15.00" onchange="updateTotalCost()">
+                        <label for="cognitiveAi" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Cognitive AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$15.00 SGD</p>
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-neuro" class="selection-checkbox screen-check" data-price="28.00" onchange="updateTotalCost()">
-                        <label for="sc-neuro" class="selection-label">
-                            <h4 class="font-serif text-lg tracking-wide">Neurological AI</h4>
+                        <input type="checkbox" id="neurosensoryAi" name="neurosensoryAi" class="selection-checkbox screen-check" data-price="28.00" onchange="updateTotalCost()">
+                        <label for="neurosensoryAi" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Neurosensory AI test</h4>
                             <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$28.00 SGD</p>
                         </label>
                     </div>
@@ -445,10 +446,10 @@
                         </label>
                     </div>
                     <div class="selection-item rounded-sm overflow-hidden">
-                        <input type="checkbox" id="sc-musc" class="selection-checkbox screen-check" data-price="15.00" onchange="updateTotalCost()">
-                        <label for="sc-musc" class="selection-label">
-                            <h4 class="font-serif text-lg tracking-wide">Musculoskeletal Health</h4>
-                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$15.00 SGD</p>
+                        <input type="checkbox" id="alzheimersAi" name="alzheimersAi" class="selection-checkbox screen-check" data-price="28.00" onchange="updateTotalCost()">
+                        <label for="alzheimersAi" class="selection-label">
+                            <h4 class="font-serif text-lg tracking-wide">Alzheimer's Health AI</h4>
+                            <p class="text-[10px] font-sans uppercase tracking-widest opacity-40">$28.00 SGD</p>
                         </label>
                     </div>
                 </div>
@@ -556,30 +557,33 @@
                         </div>
                     </a>
 
-                    <!-- Neurological Health -->
-                    <div id="dash-neuro" class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700">
+                    <!-- Neurosensory AI test -->
+                    <div id="dash-neurosensory" class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Neural Pathways</span>
-                            <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Neurological Health</h3>
+                            <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Neurosensory AI test</h3>
                         </div>
                         <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm z-20">Coming Soon</div>
                     </div>
 
                     <!-- Mental Health -->
-                    <div id="dash-mental" class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700">
+                    <a id="dash-mental" href="https://boothui.z23.web.core.windows.net/booth" target="_blank" rel="noopener noreferrer" 
+                       class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=1200&q=80')"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2">
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
                             <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Cognitive Balance</span>
-                            <h3 class="font-serif text-2xl text-white text-vibrant-shadow">Mental Health</h3>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Mental Health</h3>
+                                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
+                            </div>
                         </div>
-                        <div class="absolute top-4 right-4 bg-midnight/80 px-3 py-1 text-[8px] font-sans tracking-widest uppercase text-white border border-white/20 backdrop-blur-sm z-20">Coming Soon</div>
-                    </div>
+                    </a>
 
                     <!-- Hemoglobin Check -->
-                    <a id="dash-heme" href="https://production.genesis1medtech.com/" target="_blank" rel="noopener noreferrer" 
+                    <a id="dash-heme" href="https://production.genesis1medtech.com" target="_blank" rel="noopener noreferrer" 
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-100 group-hover:scale-110" 
                              style="background-image: url('https://i.postimg.cc/Jh6BYcJw/Screenshot-2026-02-14-at-6-27-59-PM.png'); filter: none;"></div>
@@ -592,29 +596,29 @@
                         </div>
                     </a>
 
-                    <!-- Men's Health -->
-                    <a id="dash-men" href="#" onclick="event.preventDefault()" 
+                    <!-- Cognitive AI -->
+                    <a id="dash-cognitive" href="#" onclick="event.preventDefault()" 
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
                         <div class="absolute inset-0 bg-cover bg-center card-bg" 
                              style="background-image: url('https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
-                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Vitality & Support</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Cognitive Support</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Men's Health</h3>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Cognitive AI</h3>
                                 <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
                     </a>
 
-                    <!-- Musculoskeletal Health -->
-                    <a id="dash-musc" href="#" onclick="event.preventDefault()" 
+                    <!-- Alzheimer's Health AI -->
+                    <a id="dash-alzheimers" href="#" onclick="event.preventDefault()" 
                        class="group relative block dashboard-card overflow-hidden border border-cream/10 bg-midnight transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/5">
-                        <div class="absolute inset-0 bg-cover bg-center card-bg" 
-                             style="background-image: url('https://images.unsplash.com/photo-1513506003011-3b037721b96d?auto=format&fit=crop&w=1200&q=80')"></div>
+                        <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 pointer-events-none group-hover:scale-105" 
+                             style="background-image: url('https://i.postimg.cc/qBCdPhMS/brain-AI-image.jpg'); opacity: 1; filter: grayscale(0%) brightness(100%);"></div>
                         <div class="absolute inset-0 flex flex-col justify-end p-8 space-y-2 pointer-events-none">
-                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Structural Motion</span>
+                            <span class="text-[9px] font-sans tracking-widest text-white uppercase text-vibrant-shadow">Alzheimer's Screening</span>
                             <div class="flex justify-between items-center">
-                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Musculoskeletal Health</h3>
+                                <h3 class="font-serif text-2xl text-white text-vibrant-shadow group-hover:italic transition-all">Alzheimer's Health AI</h3>
                                 <svg width="20" height="20" viewBox="0 0 15 15" fill="none" class="text-white text-vibrant-shadow opacity-0 group-hover:opacity-100 transition-opacity"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor"></path></svg>
                             </div>
                         </div>
@@ -1065,11 +1069,11 @@
         function applySmartFiltering() {
             const mappings = {
                 'sc-cv': 'dash-cv',
-                'sc-neuro': 'dash-neuro',
+                'neurosensoryAi': 'dash-neurosensory',
                 'sc-mental': 'dash-mental',
                 'sc-heme': 'dash-heme',
-                'sc-men': 'dash-men',
-                'sc-musc': 'dash-musc'
+                'cognitiveAi': 'dash-cognitive',
+                'alzheimersAi': 'dash-alzheimers'
             };
 
             let visibleCount = 0;
@@ -1097,5 +1101,6 @@
             }
         }
     </script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
